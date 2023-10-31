@@ -27,13 +27,20 @@ export const OpenWebsite = async (url, page) => {
                 const url = await page.url();
                 const parsedUrl = new URL(url);
                 const model = parsedUrl.searchParams.get('model');
+                let picutesUrl = ""
+                const imageTag = await page.$$('img[class="sc-bXCLTC jlnCeq atds-image "]');
+                for (const image of imageTag) {
+                    const imageSrc = await page.evaluate(img => img.getAttribute('src'), image);
+                    picutesUrl = picutesUrl + "," + imageSrc;
+                }
+
                 csvData.push({
                     "name": name,
                     "model": model,
                     "mileage": mileage,
                     "engineSize": engineSize,
                     "price": price,
-                    "picture": "pictureURL"
+                    "picture": picutesUrl
                 })
                 console.log("csv data array", csvData);
                 await delyTime(1000)
